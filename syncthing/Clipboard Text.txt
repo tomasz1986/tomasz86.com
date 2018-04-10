@@ -1,0 +1,43 @@
+In this thread, I am trying to provide a summary of configuration settings in Syncthing that can possibly reduce its resource usage and overhead. While these settings can be used in any Syncthing installation, their main goal is to help with using Syncthing on low-end, slow, and old devices while still being able to perform other tasks on them. Please keep in mind that how much benefit each of them may provide depends heavily on the hardware and the operating system. If unsure about a specific setting, please check Syncthing documentation at https://docs.syncthing.net for more details.
+
+Below is a list of environment variables and configuration settings that can affect Syncthing's performance. The values in brackets are recommendations for maximum optimisation for low-end hardware.
+
+1. Environment variables (https://docs.syncthing.net/includes/env-vars.html)
+
+`GOMAXPROCS` (`GOMAXPROCS = 1`)
+`GOGC` (`GOGC = 25`)
+
+2. Advanced configuration (https://docs.syncthing.net/users/config.html)
+
+`copiers` (`copiers = 1`)
+`hashers` (`hashers = 1`)
+`maxConcurrentWrites` (`maxConcurrentWrites = 1`)
+`maxFolderConcurrency` (`maxFolderConcurrency = 1`)
+`progressUpdateIntervalS` (`progressUpdateIntervalS = -1`)
+`scanProgressIntervalS` (`scanProgressIntervalS = -1`)
+`weakHashThresholdPct` (`weakHashThresholdPct = 101`)
+
+Please remember that setting `GOMAXPROCS` already affects `copiers`, `hashers`, and `maxFolderConcurrency`, so configuring them separately may not be necessary. The same is true when running Syncthing on a single-core CPU.
+
+3. GUI (https://docs.syncthing.net/users/faq.html#i-don-t-like-the-gui-or-the-theme-can-it-be-changed)
+
+The following CSS disables all animations, transitions, radius, and shadows used in the Web GUI. While not exactly necessary when using the GUI locally, I find it very helpful when administering Syncthing through a remote desktop software on a non-local machine, especially when the Internet connection between the two devices is weak.
+
+```
+*,
+:before,
+:after {
+	animation-delay: 0s !important;
+	animation-timing-function: step-start !important;
+	transition-delay: 0s !important;
+	transition-timing-function: step-start !important;
+
+	border-radius: 0 !important;
+	box-shadow: none !important;
+}
+```
+
+References:
+
+https://forum.syncthing.net/t/mips-performance/10467
+https://forum.syncthing.net/t/changing-webgui-theme-elements-after-deployment/15600
